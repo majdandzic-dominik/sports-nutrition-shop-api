@@ -2,6 +2,7 @@ package com.dmajd.nutritionapi.configuration;
 
 import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +18,9 @@ public class SeleniumConfiguration
     @Bean
     public FirefoxDriver driver()
     {
-        return new FirefoxDriver();
+        // stop selenium from opening actual browser
+        final FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.addArguments("-headless");
+        return new FirefoxDriver(firefoxOptions);
     }
 }
