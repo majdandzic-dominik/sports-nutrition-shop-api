@@ -23,7 +23,7 @@ public class GymBeamScraperService implements ScraperService
     @PostConstruct
     void postConstruct()
     {
-        scrape();
+       // scrape();
     }
 
     public GymBeamScraperService(final FirefoxDriver driver)
