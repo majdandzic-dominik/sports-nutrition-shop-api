@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -58,10 +60,17 @@ public class PolleoScraperService implements ScraperService
             // wait some time for products to load
             TimeUnit.SECONDS.sleep(3);
 
-            // get main content
+            // get all products
             WebElement mainContent = driver.findElement(By.id("main"));
-            System.out.println(mainContent.getText());
+            List<WebElement> products = mainContent.findElements(By.className("name"));
 
+            // get links for all products
+            List<String> links = new ArrayList<>();
+            for(WebElement product : products)
+            {
+                links.add(product.getAttribute("href"));
+            }
+            
         } catch (NoSuchElementException e)
         {
             System.out.println(e.getMessage());
