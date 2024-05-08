@@ -66,11 +66,16 @@ public class PolleoScraperService implements ScraperService
 
             // get links for all products
             List<String> links = new ArrayList<>();
-            for(WebElement product : products)
+            for (WebElement product : products)
             {
                 links.add(product.getAttribute("href"));
             }
-            
+
+            // scrape data for all products
+            for(String link : links)
+            {
+                scrapeProductInfo(link);
+            }
         } catch (NoSuchElementException e)
         {
             System.out.println(e.getMessage());
@@ -85,6 +90,41 @@ public class PolleoScraperService implements ScraperService
     @Override
     public void scrapeProductInfo(String url)
     {
+        driver.get(url);
+
+        String name = "";
+        String price = "";
+        String amount = null;
+        boolean isAvailable = false;
+
+        try
+        {
+            // get name, price and amount
+            WebElement content = driver.findElement(By.id("product_details_section"));
+            name = content.findElement(By.tagName("h1")).getText();
+            price = content.findElement(By.className("final-price-product-page")).getText();
+            amount = content.findElement(By.className("variant-product-text-link-selected")).getText();
+
+            // check if product is available
+            if (content.findElements(By.className("btn-notify-me")).isEmpty())
+            {
+                isAvailable = true;
+            }
+
+        } catch (NoSuchElementException e)
+        {
+            System.out.println(e.getMessage());
+        } catch (Exception e)
+        {
+            System.out.println("An error occurred");
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Name: " + name);
+        System.out.println("Price: " + price);
+        System.out.println("Amount: " + amount);
+        System.out.println("Available: " + isAvailable);
+        System.out.println("------------------------------------------------------------");
 
     }
 }
