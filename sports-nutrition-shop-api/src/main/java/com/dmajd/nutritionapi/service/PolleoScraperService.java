@@ -22,15 +22,6 @@ public class PolleoScraperService implements ScraperService
     private final FirefoxDriver driver;
     private final List<Product> productList;
 
-    @PostConstruct
-    void postConstruct()
-    {
-        System.out.println("Getting data from Polleo Sport...");
-        scrape();
-        System.out.println(productList);
-        System.out.println("Finished getting data from Polleo Sport!");
-    }
-
     PolleoScraperService(FirefoxDriver driver, List<Product> productList)
     {
         this.driver = driver;
@@ -40,6 +31,8 @@ public class PolleoScraperService implements ScraperService
     @Override
     public void scrape()
     {
+        System.out.println("Getting data from Polleo Sport...");
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
         driver.get(URL);
@@ -90,7 +83,7 @@ public class PolleoScraperService implements ScraperService
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
         }
-        driver.quit();
+        System.out.println("Finished getting data from Polleo Sport!");
     }
 
     @Override
@@ -109,8 +102,11 @@ public class PolleoScraperService implements ScraperService
             WebElement content = driver.findElement(By.id("product_details_section"));
             name = content.findElement(By.tagName("h1")).getText();
             price = content.findElement(By.className("final-price-product-page")).getText();
-            amount = content.findElement(By.className("variant-product-text-link-selected")).getText();
 
+            if (!content.findElements(By.className("variant-product-text-link-selected")).isEmpty())
+            {
+                amount = content.findElement(By.className("variant-product-text-link-selected")).getText();
+            }
             // check if product is available
             if (content.findElements(By.className("btn-notify-me")).isEmpty())
             {

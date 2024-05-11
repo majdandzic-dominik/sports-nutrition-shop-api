@@ -22,14 +22,6 @@ public class GymBeamScraperService implements ScraperService
     private final FirefoxDriver driver;
     private final List<Product> productList;
 
-    @PostConstruct
-    void postConstruct()
-    {
-        System.out.println("Getting data from GymBeam...");
-        //scrape();
-        System.out.println("Finished getting data from GymBeam!");
-    }
-
     public GymBeamScraperService(FirefoxDriver driver, List<Product> productList)
     {
         this.driver = driver;
@@ -38,6 +30,8 @@ public class GymBeamScraperService implements ScraperService
 
     public void scrape()
     {
+        System.out.println("Getting data from GymBeam...");
+
         // set implicit wait
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
@@ -77,7 +71,7 @@ public class GymBeamScraperService implements ScraperService
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
         }
-        driver.quit();
+        System.out.println("Finished getting data from GymBeam!");
     }
 
     public Product scrapeProductInfo(String url)
