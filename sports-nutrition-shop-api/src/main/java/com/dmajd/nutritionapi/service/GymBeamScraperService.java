@@ -26,7 +26,7 @@ public class GymBeamScraperService implements ScraperService
     void postConstruct()
     {
         System.out.println("Getting data from GymBeam...");
-        scrape();
+        //scrape();
         System.out.println("Finished getting data from GymBeam!");
     }
 
