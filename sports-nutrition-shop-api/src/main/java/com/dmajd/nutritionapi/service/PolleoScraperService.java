@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,18 +21,20 @@ public class PolleoScraperService implements ScraperService
     private static final String URL = "https://polleosport.hr/proteini/whey-protein/";
 
     private final FirefoxDriver driver;
-    private final List<Product> productList;
+    private final HashMap<String, ArrayList<Product>> products;
 
-    PolleoScraperService(FirefoxDriver driver, List<Product> productList)
+    PolleoScraperService(FirefoxDriver driver, HashMap<String, ArrayList<Product>> products)
     {
         this.driver = driver;
-        this.productList = productList;
+        this.products = products;
     }
 
     @Override
     public void scrape()
     {
         System.out.println("Getting data from Polleo Sport...");
+
+        ArrayList<Product> productList = new ArrayList<>();
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
@@ -83,6 +86,9 @@ public class PolleoScraperService implements ScraperService
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
         }
+
+        products.put("Polleo Sport", productList);
+
         System.out.println("Finished getting data from Polleo Sport!");
     }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,17 +21,19 @@ public class GymBeamScraperService implements ScraperService
     private static final String URL = "https://gymbeam.hr/whey-protein-sirutke";
 
     private final FirefoxDriver driver;
-    private final List<Product> productList;
+    private final HashMap<String, ArrayList<Product>> products;
 
-    public GymBeamScraperService(FirefoxDriver driver, List<Product> productList)
+    public GymBeamScraperService(FirefoxDriver driver, HashMap<String, ArrayList<Product>> products)
     {
         this.driver = driver;
-        this.productList = productList;
+        this.products = products;
     }
 
     public void scrape()
     {
         System.out.println("Getting data from GymBeam...");
+
+        ArrayList<Product> productList = new ArrayList<>();
 
         // set implicit wait
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
@@ -71,6 +74,9 @@ public class GymBeamScraperService implements ScraperService
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
         }
+
+        products.put("GymBeam", productList);
+
         System.out.println("Finished getting data from GymBeam!");
     }
 

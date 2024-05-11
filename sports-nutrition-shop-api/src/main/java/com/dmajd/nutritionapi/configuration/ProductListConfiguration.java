@@ -5,14 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class ProductListConfiguration
 {
     @Bean
-    public List<Product> productList()
+    public HashMap<String, ArrayList<Product>> products()
     {
-        return new ArrayList<Product>();
+        return new HashMap<>();
     }
 }
