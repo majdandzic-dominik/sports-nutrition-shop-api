@@ -1,7 +1,9 @@
 package com.dmajd.nutritionapi.service;
 
+import com.dmajd.nutritionapi.entity.Product;
+
 public interface ScraperService
 {
     void scrape();
-    void scrapeProductInfo(String url);
+    Product scrapeProductInfo(String url);
 }

@@ -11,6 +11,14 @@ public class Product
     {
     }
 
+    public Product(String name, String price, String amount, boolean isAvailable)
+    {
+        this.name = name;
+        this.price = price;
+        this.amount = amount;
+        this.isAvailable = isAvailable;
+    }
+
     public String getName()
     {
         return name;

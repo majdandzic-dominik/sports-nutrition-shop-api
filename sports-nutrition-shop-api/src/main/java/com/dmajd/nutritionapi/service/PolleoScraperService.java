@@ -1,5 +1,6 @@
 package com.dmajd.nutritionapi.service;
 
+import com.dmajd.nutritionapi.entity.Product;
 import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -19,16 +20,20 @@ public class PolleoScraperService implements ScraperService
     private static final String URL = "https://polleosport.hr/proteini/whey-protein/";
 
     private final FirefoxDriver driver;
+    private final List<Product> productList;
 
     @PostConstruct
     void postConstruct()
     {
+        System.out.println("Getting data from Polleo Sport...");
         scrape();
+        System.out.println("Finished getting data from Polleo Sport!");
     }
 
-    PolleoScraperService(FirefoxDriver driver)
+    PolleoScraperService(FirefoxDriver driver, List<Product> productList)
     {
         this.driver = driver;
+        this.productList = productList;
     }
 
     @Override
@@ -74,7 +79,7 @@ public class PolleoScraperService implements ScraperService
             // scrape data for all products
             for(String link : links)
             {
-                scrapeProductInfo(link);
+                productList.add(scrapeProductInfo(link));
             }
         } catch (NoSuchElementException e)
         {
@@ -88,7 +93,7 @@ public class PolleoScraperService implements ScraperService
     }
 
     @Override
-    public void scrapeProductInfo(String url)
+    public Product scrapeProductInfo(String url)
     {
         driver.get(url);
 
@@ -120,11 +125,6 @@ public class PolleoScraperService implements ScraperService
             System.out.println(e.getMessage());
         }
 
-        System.out.println("Name: " + name);
-        System.out.println("Price: " + price);
-        System.out.println("Amount: " + amount);
-        System.out.println("Available: " + isAvailable);
-        System.out.println("------------------------------------------------------------");
-
+        return new Product(name, price, amount, isAvailable);
     }
 }

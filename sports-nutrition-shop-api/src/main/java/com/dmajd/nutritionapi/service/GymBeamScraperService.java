@@ -1,5 +1,6 @@
 package com.dmajd.nutritionapi.service;
 
+import com.dmajd.nutritionapi.entity.Product;
 import jakarta.annotation.PostConstruct;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -19,16 +20,20 @@ public class GymBeamScraperService implements ScraperService
     private static final String URL = "https://gymbeam.hr/whey-protein-sirutke";
 
     private final FirefoxDriver driver;
+    private final List<Product> productList;
 
     @PostConstruct
     void postConstruct()
     {
-       // scrape();
+        System.out.println("Getting data from GymBeam...");
+        scrape();
+        System.out.println("Finished getting data from GymBeam!");
     }
 
-    public GymBeamScraperService(final FirefoxDriver driver)
+    public GymBeamScraperService(FirefoxDriver driver, List<Product> productList)
     {
         this.driver = driver;
+        this.productList = productList;
     }
 
     public void scrape()
@@ -53,22 +58,21 @@ public class GymBeamScraperService implements ScraperService
 
             // get links for all product pages
             List<String> links = new ArrayList<>();
-            for(WebElement product : products)
+            for (WebElement product : products)
             {
                 links.add(product.getAttribute("href"));
             }
 
             // scrape data for all products
-            for(String link : links)
+            for (String link : links)
             {
-                scrapeProductInfo(link);
+                productList.add(scrapeProductInfo(link));
             }
 
         } catch (NoSuchElementException e)
         {
             System.out.println(e.getMessage());
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
@@ -76,10 +80,9 @@ public class GymBeamScraperService implements ScraperService
         driver.quit();
     }
 
-    public void scrapeProductInfo(String url)
+    public Product scrapeProductInfo(String url)
     {
         driver.get(url);
-
 
         String name = "";
         String price = "";
@@ -98,13 +101,13 @@ public class GymBeamScraperService implements ScraperService
 
             // sometimes there is no options for amount
             // so we need to check if it exists before setting it
-            if(!content.findElements(By.name("super_attribute[310]")).isEmpty())
+            if (!content.findElements(By.name("super_attribute[310]")).isEmpty())
             {
                 amount = new Select(content.findElement(By.name("super_attribute[310]"))).getFirstSelectedOption().getText();
             }
 
             // check if product is available
-            if(!content.findElements(By.className("available")).isEmpty())
+            if (!content.findElements(By.className("available")).isEmpty())
             {
                 isAvailable = true;
             }
@@ -112,18 +115,12 @@ public class GymBeamScraperService implements ScraperService
         } catch (NoSuchElementException e)
         {
             System.out.println(e.getMessage());
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             System.out.println("An error occurred");
             System.out.println(e.getMessage());
         }
 
-        System.out.println("Name: " + name);
-        System.out.println("Price: " + price);
-        System.out.println("Amount: " + amount);
-        System.out.println("Available: " + isAvailable);
-        System.out.println("------------------------------------------------------------");
-
+        return new Product(name, price, amount, isAvailable);
     }
 }
