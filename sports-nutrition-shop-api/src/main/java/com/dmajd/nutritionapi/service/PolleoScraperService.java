@@ -27,6 +27,7 @@ public class PolleoScraperService implements ScraperService
     {
         System.out.println("Getting data from Polleo Sport...");
         scrape();
+        System.out.println(productList);
         System.out.println("Finished getting data from Polleo Sport!");
     }
 
@@ -73,7 +74,7 @@ public class PolleoScraperService implements ScraperService
             List<String> links = new ArrayList<>();
             for (WebElement product : products)
             {
-                links.add(product.getAttribute("href"));
+                links.add(product.findElement(By.tagName("a")).getAttribute("href"));
             }
 
             // scrape data for all products
