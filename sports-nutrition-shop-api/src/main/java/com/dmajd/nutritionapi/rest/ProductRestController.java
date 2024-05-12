@@ -4,6 +4,7 @@ import com.dmajd.nutritionapi.entity.Product;
 import com.dmajd.nutritionapi.service.GymBeamScraperService;
 import com.dmajd.nutritionapi.service.PolleoScraperService;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,12 @@ public class ProductRestController
     private PolleoScraperService polleoScraperService;
     @Autowired
     private GymBeamScraperService gymBeamScraperService;
+
+    @PreDestroy
+    public void preDestroy()
+    {
+        driver.quit();
+    }
 
     @PostConstruct
     public void postConstruct()
